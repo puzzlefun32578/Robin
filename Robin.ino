@@ -110,7 +110,7 @@ void loop() {
   
   if (command.forward > 5 )  { inactivity_timer = millis() ; }   // keep track of the last command to determine when to go to sleep 
   Serial.println( millis() - inactivity_timer );
-   if (millis() > inactivity_timer + 200000)  {
+   if (millis() > inactivity_timer + 300000)  {
     esp_bt_controller_disable();
     esp_sleep_enable_ext0_wakeup(GPIO_NUM_7,0);  //use the button pin as the external trigger for waking up; A8 = GPIO7; it is held high, so low=pressed
     rtc_gpio_pullup_en(GPIO_NUM_7);
