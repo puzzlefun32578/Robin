@@ -3,6 +3,8 @@
 #include <BLEServer.h>
 #include <FIR.h>
 #include <driver/rtc_io.h>
+#include <driver/gpio_filter.h>
+//#include <driver/lp_io.h>
 
 #define SERVICE_UUID        "ebdddb72-32f6-495f-aaf1-358ddba09f46"
 #define CONTROL_UUID        "ebdddb73-32f6-495f-aaf1-358ddba09f46"
@@ -28,6 +30,7 @@ unsigned long last_button_down;
 volatile bool cruise = false;
 volatile bool last_down = false;
 unsigned long inactivity_timer = 0;
+
 void buttonChange(){
   bool button_down = !digitalRead(BUTTON_PIN);
   if(button_down == last_down) return;
@@ -52,6 +55,11 @@ void setup() {
   pinMode(BUTTON_PIN, INPUT_PULLUP);
 
   attachInterrupt(BUTTON_PIN, buttonChange, CHANGE);
+  gpio_pin_glitch_filter_config_t config;
+  config.clk_src = RC_SLOW_CLK;
+  config.gpio_num = GPIO_NUM_7;
+  gpio_new_pin_glitch_filter(&config, *need format of filter handle here*);
+  gpio_glitch_filter_enable(filter handle here);
   
   BLEDevice::init("Robin");
   BLEServer *pServer = BLEDevice::createServer();
