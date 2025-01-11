@@ -28,6 +28,7 @@ unsigned long last_button_down;
 volatile bool cruise = false;
 volatile bool last_down = false;
 unsigned long inactivity_timer = 0;
+
 void buttonChange(){
   bool button_down = !digitalRead(BUTTON_PIN);
   if(button_down == last_down) return;
@@ -94,12 +95,12 @@ void loop() {
   }
 
   command.right=stick_pos.right;
-  if (cruise == true) {
-    if (stick_pos.forward > 64) command.forward+=2;  //increase speed 
-    else if (stick_pos.forward < -64) command.forward-=2;
+  if (cruise == true) {         //forward commands for cruise control mode
+    if (stick_pos.forward > 64) command.forward+=2;  //increase speed 2 units per loop
+    else if (stick_pos.forward < -64) command.forward-=2;  // decrease motor speed by 2 units per loop
   }
   else {
-    command.forward=stick_pos.forward/2;
+    command.forward=stick_pos.forward/2;  //forward command for manual mode
   }
   
   char buff[8];
@@ -114,7 +115,7 @@ void loop() {
     esp_bt_controller_disable();
     esp_sleep_enable_ext0_wakeup(GPIO_NUM_7,0);  //use the button pin as the external trigger for waking up; A8 = GPIO7; it is held high, so low=pressed
     rtc_gpio_pullup_en(GPIO_NUM_7);
-    //Serial.println("going to sleep now");
+    Serial.println("going to sleep now");
     esp_deep_sleep_start();
   }
   delay(100);
