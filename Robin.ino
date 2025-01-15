@@ -110,15 +110,14 @@ void loop() {
   pControlChar->setValue(buff);
   pControlChar->notify();
   
-  if (command.forward > 5 )  { inactivity_timer = millis() ; }   // keep track of the last command to determine when to go to sleep 
-  Serial.println( millis() - inactivity_timer );
-   if (millis() > inactivity_timer + 300000)  {
+  if (command.forward > 5 )  { inactivity_timer = millis() ; }   // keep track of the last command to determine when to go to sleep.  The 5 accounts for small bias in joystick
+  Serial.println( millis() - inactivity_timer ); 
+  if (millis() > inactivity_timer + 300000)  {    //go to sleep after 5 min of no joystick input
     esp_bt_controller_disable();
     esp_sleep_enable_ext0_wakeup(GPIO_NUM_7,0);  //use the button pin as the external trigger for waking up; A8 = GPIO7; it is held high, so low=pressed
-    rtc_gpio_pullup_en(GPIO_NUM_7);
-    Serial.println("going to sleep now");
-    esp_deep_sleep_start();
+    rtc_gpio_pullup_en(GPIO_NUM_7);  // this command keeps the pin high while Robin is asleep
+    esp_deep_sleep_start();  //enter deep sleep here. Robin can stay asleep indefinitely until the joystick button is pressed
   }
-  delay(100);
+  delay(100);  //read the joystick at 10 Hz
  
 }
