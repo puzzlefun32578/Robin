@@ -102,7 +102,8 @@ void loop() {
   else {
     command.forward=stick_pos.forward/2;  //forward command for manual mode
   }
-  
+  command.forward = constrain(command.forward,-120,120);
+  //Serial.println(command.forward);
   char buff[8];
   sprintf(buff, "%+04d%+04d", command.forward, command.right);
   Serial.println(buff);
