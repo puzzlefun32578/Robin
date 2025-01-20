@@ -93,17 +93,8 @@ void loop() {
     stick_pos.right = right_fir.processReading(right);
     stick_pos.forward = forward_fir.processReading(forward);
   }
-  command.right = 0;
-  if(stick_pos.right<-64) {turn_sign = -1;}
-  if(abs(stick_pos.right)>64) {turn_command++;}
-    else if(turn_command > 0) ; {}
-      command.right = turn_command * turn_sign * 5;
-      turn_command = 0;
-      turn_sign = 1;
-    }
-    
-    if(command.right 
-  //command.right=stick_pos.right;
+  command.right = stick_pos.right/25     //max stick command is 128; 128/25 is roughly 5; this is to be interpreted as requesting a 5 deg turn at each iteration (10hz)
+  
   if (cruise == true) {         //forward commands for cruise control mode
     if (stick_pos.forward > 64) command.forward+=2;  //increase speed 2 units per loop
     else if (stick_pos.forward < -64) command.forward-=2;  // decrease motor speed by 2 units per loop
