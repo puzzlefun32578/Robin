@@ -1,3 +1,10 @@
+/*
+This program is name 'Robin' because it runs on a remote control named 'Robin' that is used to control a golf cart named 'Batman'.
+'Batman' is the name of a used Bat Caddy X3R motorized push golf cart I purchased from Ken Adams in fall 2024.  
+This program runs on an XIAO ESP32-S3 board using an Xtensa microprocessor. 
+The data passed from Robin to Batman via Bluetooth consists of 2 integers passed in an asci string.  One integer represents forward speed, and
+the other represents a requested change in the direction the cart is moving.  See Batman.ino for more information about how Batman functions.
+*/
 #include <BLEDevice.h>  //this makes required library of functions available
 #include <BLEUtils.h>
 #include <BLEServer.h>
@@ -93,7 +100,7 @@ void loop() {
     stick_pos.right = right_fir.processReading(right);
     stick_pos.forward = forward_fir.processReading(forward);
   }
-  command.right = stick_pos.right/25     //max stick command is 128; 128/25 is roughly 5; this is to be interpreted as requesting a 5 deg turn at each iteration (10hz)
+  command.right = stick_pos.right/25;    //max stick command is 128; 128/25 is roughly 5; this is to be interpreted as requesting a 5 deg turn at each iteration (10hz)
   
   if (cruise == true) {         //forward commands for cruise control mode
     if (stick_pos.forward > 64) command.forward+=2;  //increase speed 2 units per loop
